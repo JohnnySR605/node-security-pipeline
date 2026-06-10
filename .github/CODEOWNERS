@@ -1,0 +1,9 @@
+# CODEOWNERS
+# This file defines code ownership rules for the repository
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+* @JohnnySR605
+
+# Specific paths
+.github/ @JohnnySR605
+secure-express-api/ @JohnnySR605
