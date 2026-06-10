@@ -1,4 +1,4 @@
-# secure-express-api
+# node-security-pipeline
 
 Node.js + Express + TypeScript API with a full 5-layer security pipeline.
 
@@ -14,7 +14,7 @@ Node.js + Express + TypeScript API with a full 5-layer security pipeline.
 
 ```bash
 # 1. Clone the repo
-git clone <your-repo-url>
+git clone "Your repository URL"
 cd secure-express-api
 
 # 2. Install dependencies (also installs Husky hooks automatically)
