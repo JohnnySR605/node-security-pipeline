@@ -11,7 +11,7 @@
     "lint:fix": "eslint 'src/**/*.ts' --fix",
     "secretlint": "secretlint '**/*'",
     "audit:check": "audit-ci --high",
-    "prepare": "husky"
+    "prepare": "node node_modules/husky/bin.js"
   },
   "dependencies": {
     "express": "^4.19.2",
