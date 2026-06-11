@@ -7,9 +7,9 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts",
-    "lint": "eslint 'src/**/*.ts' --max-warnings=0",
-    "lint:fix": "eslint 'src/**/*.ts' --fix",
-    "secretlint": "secretlint '**/*'",
+    "lint": "eslint src --ext .ts --max-warnings=0",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "secretlint": "secretlint --secretlintignore .secretlintignore .",
     "audit:check": "audit-ci --high",
     "prepare": "node node_modules/husky/bin.js"
   },
