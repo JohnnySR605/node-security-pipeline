@@ -1,4 +1,4 @@
-﻿name: CI
+name: CI
 
 on:
   push:
@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
-          cache-dependency-path: secure-express-api/repo/package-lock.json
+          cache-dependency-path: "**/package-lock.json"
       - name: Install dependencies
         run: npm ci
       - name: Lint
@@ -48,7 +48,7 @@ jobs:
         with:
           node-version: 22.x
           cache: npm
-          cache-dependency-path: secure-express-api/repo/package-lock.json
+          cache-dependency-path: "**/package-lock.json"
       - name: Install dependencies
         run: npm ci
       - name: Snyk scan
@@ -83,7 +83,7 @@ jobs:
         with:
           node-version: 22.x
           cache: npm
-          cache-dependency-path: secure-express-api/repo/package-lock.json
+          cache-dependency-path: "**/package-lock.json"
       - name: Install dependencies
         working-directory: secure-express-api/repo
         run: npm ci
