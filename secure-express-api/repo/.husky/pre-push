@@ -1,8 +1,0 @@
-
-# Run gitleaks if available, skip if not installed
-if command -v gitleaks &> /dev/null; then
-  gitleaks protect --staged -v
-else
-  echo "⚠️  gitleaks not installed — skipping secret scan on push"
-  echo "   Install: https://github.com/gitleaks/gitleaks#installing"
-fi

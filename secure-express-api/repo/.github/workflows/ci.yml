@@ -7,63 +7,79 @@ on:
     branches: [ main, master ]
 
 jobs:
+  # ─── Job 1: Test + Lint + Build ───────────────────────────────────────────
   test:
     name: Test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: secure-express-api/repo
+
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
-          cache-dependency-path: "**/package-lock.json"
+          cache-dependency-path: secure-express-api/repo/package-lock.json
+
       - name: Install dependencies
         run: npm ci
+
       - name: Lint
         run: npm run lint
+
       - name: Check for secrets
         run: npm run secretlint
+
       - name: Audit dependencies
         run: npm run audit:check
+
       - name: Build
         run: npm run build
 
+  # ─── Job 2: Snyk + Semgrep ────────────────────────────────────────────────
   security:
     name: Security scan (Snyk + Semgrep)
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: secure-express-api/repo
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: npm
-          cache-dependency-path: "**/package-lock.json"
+          cache-dependency-path: secure-express-api/repo/package-lock.json
+
       - name: Install dependencies
         run: npm ci
-      - name: Snyk scan
+
+      - name: Snyk — dependency vulnerability scan
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
         with:
           args: --severity-threshold=high
         continue-on-error: true
-      - name: Semgrep scan
+
+      - name: Semgrep — SAST scan
         uses: semgrep/semgrep-action@v1
         env:
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
         continue-on-error: true
 
+  # ─── Job 3: CodeQL ────────────────────────────────────────────────────────
   codeql:
     name: CodeQL analysis
     runs-on: ubuntu-latest
@@ -71,42 +87,52 @@ jobs:
       actions: read
       contents: read
       security-events: write
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
           languages: javascript-typescript
           queries: security-extended
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
           cache: npm
-          cache-dependency-path: "**/package-lock.json"
+          cache-dependency-path: secure-express-api/repo/package-lock.json
+
       - name: Install dependencies
         working-directory: secure-express-api/repo
         run: npm ci
+
       - name: Build for CodeQL
         working-directory: secure-express-api/repo
         run: npm run build
+
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v4
         with:
           category: /language:javascript-typescript
 
+  # ─── Job 4: Trivy ─────────────────────────────────────────────────────────
   trivy:
-    name: Trivy Docker image scan
+    name: Trivy — Docker image scan
     runs-on: ubuntu-latest
     permissions:
       contents: read
       security-events: write
       actions: read
+
     steps:
       - uses: actions/checkout@v4
+
       - name: Build Docker image
         run: docker build -t secure-express-api:${{ github.sha }} secure-express-api/repo
-      - name: Trivy scan
+
+      - name: Trivy — scan image for vulnerabilities
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: secure-express-api:${{ github.sha }}
@@ -114,7 +140,8 @@ jobs:
           exit-code: 0
           severity: CRITICAL,HIGH
           ignore-unfixed: true
-      - name: Trivy SARIF report
+
+      - name: Trivy — generate SARIF report
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: secure-express-api:${{ github.sha }}
@@ -122,7 +149,8 @@ jobs:
           output: trivy-results.sarif
           severity: CRITICAL,HIGH
           ignore-unfixed: true
-      - name: Upload Trivy results
+
+      - name: Upload Trivy results to Security tab
         uses: github/codeql-action/upload-sarif@v4
         if: always()
         with:
