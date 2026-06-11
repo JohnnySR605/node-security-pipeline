@@ -1,5 +1,3 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
 
 # Run gitleaks if available, skip if not installed
 if command -v gitleaks &> /dev/null; then
