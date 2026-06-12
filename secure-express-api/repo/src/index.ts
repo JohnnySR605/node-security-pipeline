@@ -136,7 +136,7 @@ app.post('/api/users', authLimiter, (req: Request, res: Response) => {
 });
 
 // ─── Global Error Handler ─────────────────────────────────────────────────
-app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+app.use((err: Error, _req: Request, res: Response, ___next: NextFunction) => {
   if (err instanceof ZodError) {
     return res.status(400).json({ error: 'Validation error', details: err.flatten() });
   }
