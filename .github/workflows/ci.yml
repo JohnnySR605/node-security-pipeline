@@ -15,7 +15,7 @@ jobs:
         working-directory: secure-express-api/repo
     strategy:
       matrix:
-        node-version: [18.x, 20.x, 22.x]
+        node-version: [22.x]
     steps:
       - uses: actions/checkout@v4
       - name: Setup Node.js ${{ matrix.node-version }}
@@ -99,9 +99,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Docker image
-        working-directory: secure-express-api/repo
-        run: docker build -t secure-express-api:${{ github.sha }} .
-      - name: Trivy scan
+        run: docker build -t secure-express-api:${{ github.sha }} secure-express-api/repo/
+      - name: Trivy scan table
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: secure-express-api:${{ github.sha }}
