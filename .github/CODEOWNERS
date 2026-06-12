@@ -1,9 +1,18 @@
-# CODEOWNERS
-# This file defines code ownership rules for the repository
-# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+﻿# Each line defines who must review PRs that touch those files.
+# The last matching rule takes precedence.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
+# Default: all files require review from the team lead
 * @JohnnySR605
 
-# Specific paths
-.github/ @JohnnySR605
-secure-express-api/ @JohnnySR605
+# CI/CD and workflow changes require all three leads to review
+.github/workflows/ @JohnnySR605 @teammate2 @teammate3
+
+# Source code changes require at least one dev to review
+secure-express-api/repo/src/ @JohnnySR605 @teammate2
+
+# Security config changes require the security lead
+.github/CODEOWNERS @JohnnySR605
+secure-express-api/repo/.eslintrc.json @JohnnySR605
+secure-express-api/repo/.secretlintrc.json @JohnnySR605
+secure-express-api/repo/.husky/ @JohnnySR605
