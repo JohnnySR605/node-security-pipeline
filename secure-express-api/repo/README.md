@@ -29,6 +29,8 @@ A production-ready Node.js + Express + TypeScript API with a **5-layer security 
 
 ## Quick Start
 
+### Option A — Clone via Git (recommended)
+
 ```bash
 # 1. Clone the repo
 git clone https://github.com/JohnnySR605/node-security-pipeline.git
@@ -48,6 +50,42 @@ docker compose up
 ```
 
 Once you run `npm install`, the Git hooks (Layer 2) are active immediately — no extra setup needed.
+
+### Option B — Downloaded as a ZIP from GitHub
+
+If you used GitHub's **"Download ZIP"** button instead of `git clone`, the folder you extract has **no `.git` directory** — Husky cannot install hooks into a repo that doesn't exist yet. You must run `git init` **before** `npm install`, otherwise the `prepare` script will fail silently and Layer 2 (commit/push hooks) won't work.
+
+```bash
+# 1. Extract the ZIP, then enter the project folder
+cd node-security-pipeline-main/secure-express-api/repo
+
+# 2. Initialize a fresh Git repo — REQUIRED before npm install
+git init
+
+# 3. Install dependencies (Husky hooks install into the new .git/ now)
+npm install
+
+# 4. Copy environment file and fill in values
+cp .env.example .env
+
+# 5. Run in development
+npm run dev
+
+# 6. Or run with Docker
+docker compose up
+```
+
+> ⚠️ If you already ran `npm install` before `git init`, just re-run `npm install` afterward (or `npx husky` manually) so the hooks get installed into `.git/hooks/`.
+
+**Connecting to your own GitHub repo afterward:**
+
+```bash
+git add .
+git commit -m "initial commit"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+git push -u origin main
+```
 
 ---
 
