@@ -1,4 +1,4 @@
-name: CI
+﻿name: CI
 
 on:
   push:
@@ -22,8 +22,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: npm
-          cache-dependency-path: "**/package-lock.json"
       - name: Install dependencies
         run: npm ci
       - name: Lint
@@ -47,8 +45,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          cache: npm
-          cache-dependency-path: "**/package-lock.json"
       - name: Install dependencies
         run: npm ci
       - name: Snyk scan
@@ -82,8 +78,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          cache: npm
-          cache-dependency-path: "**/package-lock.json"
       - name: Install dependencies
         working-directory: secure-express-api/repo
         run: npm ci
@@ -105,7 +99,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Build Docker image
-        run: docker build -t secure-express-api:${{ github.sha }} secure-express-api/repo
+        working-directory: secure-express-api/repo
+        run: docker build -t secure-express-api:${{ github.sha }} .
       - name: Trivy scan
         uses: aquasecurity/trivy-action@master
         with:
