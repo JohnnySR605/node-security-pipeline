@@ -130,7 +130,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Build Docker image
-        run: docker build -t secure-express-api:${{ github.sha }} secure-express-api/repo/
+        run: docker build -t secure-express-api:${{ github.sha }} -f secure-express-api/repo/Dockerfile secure-express-api/repo
 
       - name: Trivy — scan image for vulnerabilities
         uses: aquasecurity/trivy-action@master
